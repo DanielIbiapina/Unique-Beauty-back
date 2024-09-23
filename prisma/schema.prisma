@@ -1,0 +1,65 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL_LOCAL")
+}
+
+model Category {
+    id       Int       @id @default(autoincrement())
+    name     String    @unique
+    services Service[]
+}
+
+model Service {
+    id                 Int                  @id @default(autoincrement())
+    name               String
+    price              Float
+    category           Category             @relation(fields: [categoryId], references: [id])
+    categoryId         Int
+    AppointmentService AppointmentService[]
+}
+
+model Professional {
+    id       Int    @id @default(autoincrement())
+    name     String
+    imageUrl String
+
+    // Você pode adicionar mais campos conforme necessário, por exemplo:
+    // email    String?
+    // phone    String?
+    // specialty String?
+    AppointmentService AppointmentService[]
+}
+
+model Appointment {
+    id         Int                  @id @default(autoincrement())
+    dateTime   DateTime
+    totalPrice Float
+    client     Client               @relation(fields: [clientId], references: [id])
+    clientId   Int
+    services   AppointmentService[]
+    status     String // Por exemplo: "pendente", "confirmado", "concluído", "cancelado"
+}
+
+model AppointmentService {
+    id             Int          @id @default(autoincrement())
+    appointment    Appointment  @relation(fields: [appointmentId], references: [id])
+    appointmentId  Int
+    service        Service      @relation(fields: [serviceId], references: [id])
+    serviceId      Int
+    professional   Professional @relation(fields: [professionalId], references: [id])
+    professionalId Int
+    price          Float
+}
+
+model Client {
+    id           Int           @id @default(autoincrement())
+    name         String
+    email        String
+    appointments Appointment[]
+    phone        String?
+    address      String?
+}
