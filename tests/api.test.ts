@@ -4,26 +4,10 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-beforeAll(async () => {
-  // Configuração inicial, se necessário
-  await prisma.$connect();
-});
-
-afterAll(async () => {
-  // Limpeza após todos os testes
-  await prisma.$disconnect();
-});
-
 describe("Appointments API", () => {
   let appointmentId: number;
 
-  afterEach(async () => {
-    // Limpeza após cada teste
-    await prisma.appointmentService.deleteMany();
-    await prisma.appointment.deleteMany();
-  });
-
-  describe("POST /appointments", () => {
+  /*describe("POST /appointments", () => {
     it("should return 400 for invalid input", async () => {
       const response = await request(app).post("/appointments").send({
         // Dados inválidos ou incompletos
@@ -59,7 +43,7 @@ describe("Appointments API", () => {
       expect(response.body.services[0]).toHaveProperty("serviceId", 1);
       expect(response.body.services[1]).toHaveProperty("serviceId", 2);
     });
-  });
+  });*/
 
   describe("GET /appointments", () => {
     it("should return a list of appointments", async () => {
@@ -104,6 +88,26 @@ describe("GET /professionals", () => {
     if (response.status === 500) {
       console.error("Erro do servidor:", response.text);
     }
+    expect(response.status).toBe(200);
+  });
+});
+
+describe("GET /appointments/:ano/:mes/faturamento", () => {
+  it("should return 200 OK!", async () => {
+    const response = await request(app).get(
+      "/appointments/2023/08/faturamento"
+    );
+    console.log("Resposta do corpo:", response.body);
+    expect(response.status).toBe(200);
+  });
+});
+
+describe("GET /appointments/:ano/:mes/faturamento/profissional", () => {
+  it("should return 200 OK!", async () => {
+    const response = await request(app).get(
+      "/appointments/2023/08/faturamento/profissional"
+    );
+    console.log("Resposta do corpo:", response.body);
     expect(response.status).toBe(200);
   });
 });

@@ -1,4 +1,4 @@
-import { PrismaClient, Service } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -41,6 +41,52 @@ export class ServicesRepository {
       price: service.price,
       category: service.category.name,
     };
+  }
+
+  async findMostPopularServices(
+    startDate: Date,
+    endDate: Date,
+    limit: number = 3
+  ): Promise<{ service: string; count: number }[]> {
+    const popularServices = await prisma.appointmentService.groupBy({
+      by: ["serviceId"],
+      where: {
+        appointment: {
+          dateTime: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+      },
+      _count: {
+        serviceId: true,
+      },
+      orderBy: {
+        _count: {
+          serviceId: "desc",
+        },
+      },
+      take: limit,
+    });
+
+    if (popularServices.length === 0) {
+      return [];
+    }
+
+    const servicesWithNames = await Promise.all(
+      popularServices.map(async (item) => {
+        const service = await prisma.service.findUnique({
+          where: { id: item.serviceId },
+          select: { name: true },
+        });
+        return {
+          service: service?.name || "Serviço Desconhecido",
+          count: item._count.serviceId,
+        };
+      })
+    );
+
+    return servicesWithNames;
   }
 
   // Adicione outros métodos conforme necessário (create, update, delete)

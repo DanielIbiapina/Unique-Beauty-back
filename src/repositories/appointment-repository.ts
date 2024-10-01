@@ -118,10 +118,74 @@ export class AppointmentRepository {
     });
   }
 
+  async getAppointmentsByProfessional(
+    professionalId: number
+  ): Promise<Appointment[]> {
+    return this.prisma.appointment.findMany({
+      where: {
+        services: {
+          some: { professionalId: professionalId },
+        },
+        status: "confirmado",
+      },
+      include: {
+        services: {
+          include: {
+            service: true,
+            professional: true,
+          },
+        },
+        client: true,
+      },
+    });
+  }
+
   async delete(id: number): Promise<void> {
     await this.prisma.appointment.delete({
       where: { id },
     });
+  }
+
+  async getFaturamentoMensal(ano: number, mes: number): Promise<number> {
+    const resultado = await this.prisma.appointment.aggregate({
+      _sum: {
+        totalPrice: true,
+      },
+      where: {
+        dateTime: {
+          gte: new Date(ano, mes - 1, 1),
+          lt: new Date(ano, mes, 0), // Corrigido para o último dia do mês
+        },
+        status: "concluído",
+      },
+    });
+
+    const faturamento = resultado._sum.totalPrice || 0;
+
+    return faturamento;
+  }
+
+  async getFaturamentoPorProfissional(
+    ano: number,
+    mes: number
+  ): Promise<
+    Array<{ professionalId: number; nome: string; faturamento: number }>
+  > {
+    return this.prisma.$queryRaw`
+      SELECT 
+        ap."professionalId",
+        p.name as nome,
+        SUM(ap.price) as faturamento
+      FROM "AppointmentService" ap
+      JOIN "Professional" p ON p.id = ap."professionalId"
+      JOIN "Appointment" a ON a.id = ap."appointmentId"
+      WHERE 
+        EXTRACT(YEAR FROM a."dateTime") = ${ano}
+        AND EXTRACT(MONTH FROM a."dateTime") = ${mes}
+        AND a.status = 'concluído'
+      GROUP BY ap."professionalId", p.name
+      ORDER BY faturamento DESC
+    `;
   }
 
   // Métodos específicos para AppointmentServic

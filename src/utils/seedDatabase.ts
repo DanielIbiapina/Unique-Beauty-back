@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  const categories = ["Cabelo", "Unhas", "Massagens", "Outros"];
+  const categories = ["Cabelo", "Unhas", "Depilação", "Outros"];
 
   for (const categoryName of categories) {
     await prisma.category.create({
@@ -22,10 +22,11 @@ async function main() {
     { name: "Com Francesa", price: 60, categoryName: "Unhas" },
     { name: "Verniz", price: 30, categoryName: "Unhas" },
     { name: "Manutenção", price: 50, categoryName: "Unhas" },
-    { name: "Massagem corporal", price: 150, categoryName: "Massagens" },
-    { name: "SPA dos pés", price: 80, categoryName: "Massagens" },
+    { name: "Axilas", price: 150, categoryName: "Depilação" },
+    { name: "Virilha Completa", price: 80, categoryName: "Depilação" },
+    { name: "Perna Inteira", price: 80, categoryName: "Depilação" },
     { name: "Maquiagem profissional", price: 100, categoryName: "Outros" },
-    { name: "Depilação com cera e pinça", price: 70, categoryName: "Outros" },
+    { name: "Massagem Corporal", price: 70, categoryName: "Outros" },
   ];
 
   for (const service of services) {

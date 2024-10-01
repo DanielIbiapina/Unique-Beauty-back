@@ -16,7 +16,21 @@ export class AppointmentController {
       );
       res.status(201).json(newAppointment);
     } catch (error) {
-      res.status(400).json({ error: "Erro ao criar o agendamento" });
+      console.error("Erro ao criar agendamento:", error);
+      res.status(500).json({ error: "Erro ao criar o agendamento" });
+    }
+  }
+
+  async getAppointmentsByProfessional(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const appointments =
+        await this.appointmentService.getAppointmentsByProfessional(Number(id));
+      res.json(appointments);
+    } catch (error) {
+      res
+        .status(400)
+        .json({ error: "Erro ao buscar agendamentos do profissional" });
     }
   }
 
@@ -71,6 +85,36 @@ export class AppointmentController {
       res.status(204).send();
     } catch (error) {
       res.status(400).json({ error: "Erro ao excluir o agendamento" });
+    }
+  }
+
+  async getFaturamentoMensal(req: Request, res: Response) {
+    try {
+      const { ano, mes } = req.params;
+      const faturamento = await this.appointmentService.getFaturamentoMensal(
+        Number(ano),
+        Number(mes)
+      );
+
+      res.json({ faturamento });
+    } catch (error) {
+      res.status(400).json({ error: "Erro ao buscar o faturamento mensal" });
+    }
+  }
+
+  async getFaturamentoPorProfissional(req: Request, res: Response) {
+    try {
+      const { ano, mes } = req.params;
+      const faturamentoPorProfissional =
+        await this.appointmentService.getFaturamentoPorProfissional(
+          Number(ano),
+          Number(mes)
+        );
+      res.json({ faturamentoPorProfissional });
+    } catch (error) {
+      res
+        .status(400)
+        .json({ error: "Erro ao buscar o faturamento por profissional" });
     }
   }
 }

@@ -45,5 +45,26 @@ export class ServicesController {
     }
   }
 
+  async getMostPopularServices(req: Request, res: Response) {
+    const { year, month } = req.params;
+    const yearNum = parseInt(year);
+    const monthNum = parseInt(month) - 1; // JavaScript usa meses de 0 a 11
+
+    // Calcula o primeiro dia do mês
+    const startDate = new Date(yearNum, monthNum, 1);
+
+    // Calcula o último dia do mês
+    const endDate = new Date(yearNum, monthNum + 1, 0);
+
+    try {
+      const mostPopularServices =
+        await this.servicesService.getMostPopularServices(startDate, endDate);
+      res.json(mostPopularServices);
+    } catch (error) {
+      console.error("Erro ao obter serviços mais populares:", error);
+      res.status(500).json({ error: "Erro ao obter serviços mais populares" });
+    }
+  }
+
   // Adicione outros métodos conforme necessário (create, update, delete)
 }

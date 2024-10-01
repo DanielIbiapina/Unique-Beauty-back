@@ -45,5 +45,17 @@ export class ServicesService {
     return groupedServices;
   }
 
+  async getMostPopularServices(
+    startDate: Date,
+    endDate: Date,
+    limit: number = 3
+  ): Promise<{ service: string; count: number }[]> {
+    return this.servicesRepository.findMostPopularServices(
+      startDate,
+      endDate,
+      limit
+    );
+  }
+
   // Adicione outros métodos conforme necessário (create, update, delete)
 }

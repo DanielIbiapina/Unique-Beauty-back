@@ -11,4 +11,12 @@ export class ProfessionalsService {
   async getAllProfessionals(): Promise<Professional[]> {
     return this.professionalRepository.findAll();
   }
+
+  async createProfessional(data: Professional): Promise<Professional> {
+    return this.professionalRepository.create(data);
+  }
+
+  async deleteProfessional(id: number): Promise<void> {
+    return this.professionalRepository.delete(id);
+  }
 }

@@ -22,6 +22,12 @@ servicesRouter.get(
   servicesController.getServiceById.bind(servicesController)
 );
 
+// Rota para obter serviços mais populares
+servicesRouter.get(
+  "/most-popular/:year/:month",
+  servicesController.getMostPopularServices.bind(servicesController)
+);
+
 // Adicione outras rotas conforme necessário, por exemplo:
 // servicesRouter.post("/", servicesController.createService.bind(servicesController));
 // servicesRouter.put("/:id", servicesController.updateService.bind(servicesController));

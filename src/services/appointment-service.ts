@@ -38,6 +38,14 @@ export class AppointmentService {
     return appointment;
   }
 
+  async getAppointmentsByProfessional(
+    professionalId: number
+  ): Promise<Appointment[]> {
+    return this.appointmentRepository.getAppointmentsByProfessional(
+      professionalId
+    );
+  }
+
   async getAppointment(id: number): Promise<Appointment | null> {
     return this.appointmentRepository.findById(id);
   }
@@ -83,5 +91,40 @@ export class AppointmentService {
 
   calculateTotalPrice(services: Array<{ price: number }>): number {
     return services.reduce((total, service) => total + service.price, 0);
+  }
+
+  async getFaturamentoMensal(ano: number, mes: number): Promise<number> {
+    return this.appointmentRepository.getFaturamentoMensal(ano, mes);
+  }
+
+  async getFaturamentoPorProfissional(
+    ano: number,
+    mes: number
+  ): Promise<
+    Array<{ professionalId: number; nome: string; faturamento: number }>
+  > {
+    return this.appointmentRepository.getFaturamentoPorProfissional(ano, mes);
+  }
+
+  async getDadosFaturamento(
+    ano: number,
+    mes: number
+  ): Promise<{
+    faturamentoTotal: number;
+    faturamentoPorProfissional: Array<{
+      professionalId: number;
+      nome: string;
+      faturamento: number;
+    }>;
+  }> {
+    const [faturamentoTotal, faturamentoPorProfissional] = await Promise.all([
+      this.getFaturamentoMensal(ano, mes),
+      this.getFaturamentoPorProfissional(ano, mes),
+    ]);
+
+    return {
+      faturamentoTotal,
+      faturamentoPorProfissional,
+    };
   }
 }

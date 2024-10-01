@@ -23,15 +23,23 @@ model Service {
 }
 
 model Professional {
-    id       Int    @id @default(autoincrement())
-    name     String
-    imageUrl String
-
-    // Você pode adicionar mais campos conforme necessário, por exemplo:
-    // email    String?
-    // phone    String?
-    // specialty String?
+    id                 Int                  @id @default(autoincrement())
+    name               String
+    imageUrl           String
+    role               String
     AppointmentService AppointmentService[]
+    scheduleSlots      ScheduleSlot[] // Novo campo para relacionar com os slots de agenda
+}
+
+// Novo modelo para os slots de agenda
+model ScheduleSlot {
+    id             Int          @id @default(autoincrement())
+    date           DateTime
+    startTime      String
+    endTime        String
+    available      Boolean      @default(true)
+    professional   Professional @relation(fields: [professionalId], references: [id])
+    professionalId Int
 }
 
 model Appointment {

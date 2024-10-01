@@ -9,4 +9,14 @@ professionalsRouter.get(
   professionalsController.getAllProfessionals.bind(professionalsController)
 );
 
+professionalsRouter.post(
+  "/",
+  professionalsController.createProfessional.bind(professionalsController)
+);
+
+professionalsRouter.delete(
+  "/:id",
+  professionalsController.deleteProfessional.bind(professionalsController)
+);
+
 export { professionalsRouter };
