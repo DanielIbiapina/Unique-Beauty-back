@@ -30,17 +30,20 @@ appointmentRouter.get(
   appointmentController.getAppointment.bind(appointmentController)
 );
 
+// Substituir as duas rotas de faturamento por uma única rota
 appointmentRouter.get(
   "/:ano/:mes/faturamento",
   appointmentController.getFaturamentoMensal.bind(appointmentController)
 );
 
-appointmentRouter.get(
-  "/:ano/:mes/faturamento/profissional",
-  appointmentController.getFaturamentoPorProfissional.bind(
-    appointmentController
-  )
-);
+// Remover a rota getFaturamentoPorProfissional, pois agora está incluída em getFaturamentoMensal
+// appointmentRouter.get(
+//   "/:ano/:mes/faturamento/profissional",
+//   appointmentController.getFaturamentoPorProfissional.bind(
+//     appointmentController
+//   )
+// );
+
 // Atualizar um agendamento existente
 appointmentRouter.put(
   "/:id",

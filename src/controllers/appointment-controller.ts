@@ -24,6 +24,7 @@ export class AppointmentController {
   async getAppointmentsByProfessional(req: Request, res: Response) {
     try {
       const { id } = req.params;
+
       const appointments =
         await this.appointmentService.getAppointmentsByProfessional(Number(id));
       res.json(appointments);
@@ -91,30 +92,18 @@ export class AppointmentController {
   async getFaturamentoMensal(req: Request, res: Response) {
     try {
       const { ano, mes } = req.params;
-      const faturamento = await this.appointmentService.getFaturamentoMensal(
-        Number(ano),
-        Number(mes)
-      );
-
-      res.json({ faturamento });
-    } catch (error) {
-      res.status(400).json({ error: "Erro ao buscar o faturamento mensal" });
-    }
-  }
-
-  async getFaturamentoPorProfissional(req: Request, res: Response) {
-    try {
-      const { ano, mes } = req.params;
-      const faturamentoPorProfissional =
-        await this.appointmentService.getFaturamentoPorProfissional(
+      console.log(ano, mes);
+      const dadosFaturamento =
+        await this.appointmentService.getDadosFaturamento(
           Number(ano),
           Number(mes)
         );
-      res.json({ faturamentoPorProfissional });
+      console.log(dadosFaturamento);
+      res.json(dadosFaturamento);
     } catch (error) {
-      res
-        .status(400)
-        .json({ error: "Erro ao buscar o faturamento por profissional" });
+      res.status(400).json({ error: "Erro ao buscar os dados de faturamento" });
     }
   }
+
+  // Remover o método getFaturamentoPorProfissional, pois agora está incluído em getDadosFaturamento
 }

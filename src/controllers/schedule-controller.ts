@@ -36,6 +36,22 @@ export class ScheduleController {
     }
   }
 
+  async getFilteredScheduleSlots(req: Request, res: Response) {
+    try {
+      const { professionalId, startDate, numberOfDays } = req.params;
+      const scheduleSlots = await this.scheduleService.getFilteredScheduleSlots(
+        parseInt(professionalId),
+        new Date(startDate),
+        parseInt(numberOfDays)
+      );
+
+      res.status(200).json(scheduleSlots);
+    } catch (error) {
+      console.error("Erro ao buscar slots de agenda:", error);
+      res.status(500).json({ error: "Erro ao buscar slots de agenda" });
+    }
+  }
+
   async getScheduleSlotsByProfessional(req: Request, res: Response) {
     try {
       const { id } = req.params;
@@ -52,8 +68,7 @@ export class ScheduleController {
     try {
       const { professionalId, date, startTime } = req.params;
       const { available } = req.body;
-      console.log("professionalId", professionalId);
-      console.log("professionalIdNumber", Number(professionalId));
+
       const scheduleSlot = await this.scheduleService.updateScheduleSlot(
         Number(professionalId),
         date,

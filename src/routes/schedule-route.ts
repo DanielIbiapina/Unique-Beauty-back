@@ -15,6 +15,11 @@ scheduleRouter.get(
 );
 
 scheduleRouter.get(
+  "/filtered/:professionalId/:startDate/:numberOfDays",
+  scheduleController.getFilteredScheduleSlots.bind(scheduleController)
+);
+
+scheduleRouter.get(
   "/:id",
   scheduleController.getScheduleSlotsByProfessional.bind(scheduleController)
 );

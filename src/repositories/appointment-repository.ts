@@ -18,6 +18,7 @@ export class AppointmentRepository {
         serviceId: number;
         professionalId: number;
         price: number;
+        dateTime: Date; // Adicionado dateTime
       }>;
     }
   ): Promise<Appointment> {
@@ -25,7 +26,10 @@ export class AppointmentRepository {
       const { services, ...appointmentData } = data;
 
       const appointment = await prisma.appointment.create({
-        data: appointmentData,
+        data: {
+          ...appointmentData,
+          dateTime: services[0].dateTime, // Usando o dateTime do primeiro serviço como referência
+        },
         include: {
           client: true,
         },
@@ -39,6 +43,7 @@ export class AppointmentRepository {
               serviceId: service.serviceId,
               professionalId: service.professionalId,
               price: service.price,
+              dateTime: service.dateTime, // Usando o dateTime específico do serviço
             },
             include: {
               service: true,
@@ -72,20 +77,56 @@ export class AppointmentRepository {
 
   async update(
     id: number,
-    data: Prisma.AppointmentUpdateInput
+    data: Prisma.AppointmentUpdateInput & {
+      services?: Array<{
+        id?: number;
+        serviceId: number;
+        professionalId: number;
+        price: number;
+        dateTime: Date; // Adicionado dateTime
+      }>;
+    }
   ): Promise<Appointment> {
-    return this.prisma.appointment.update({
-      where: { id },
-      data,
-      include: {
-        services: {
-          include: {
-            service: true,
-            professional: true,
+    const { services, ...appointmentData } = data;
+
+    return this.prisma.$transaction(async (prisma) => {
+      const updatedAppointment = await prisma.appointment.update({
+        where: { id },
+        data: appointmentData,
+        include: {
+          services: {
+            include: {
+              service: true,
+              professional: true,
+            },
           },
+          client: true,
         },
-        client: true,
-      },
+      });
+
+      if (services) {
+        // Deletar serviços existentes
+        await prisma.appointmentService.deleteMany({
+          where: { appointmentId: id },
+        });
+
+        // Criar novos serviços
+        await Promise.all(
+          services.map((service) =>
+            prisma.appointmentService.create({
+              data: {
+                appointmentId: id,
+                serviceId: service.serviceId,
+                professionalId: service.professionalId,
+                price: service.price,
+                dateTime: service.dateTime,
+              },
+            })
+          )
+        );
+      }
+
+      return updatedAppointment;
     });
   }
 
@@ -119,12 +160,16 @@ export class AppointmentRepository {
   }
 
   async getAppointmentsByProfessional(
-    professionalId: number
+    professionalId: number,
+    startDate: Date,
+    endDate: Date
   ): Promise<Appointment[]> {
     return this.prisma.appointment.findMany({
       where: {
         services: {
-          some: { professionalId: professionalId },
+          some: {
+            professionalId: professionalId,
+          },
         },
         status: "confirmado",
       },
@@ -136,6 +181,9 @@ export class AppointmentRepository {
           },
         },
         client: true,
+      },
+      orderBy: {
+        dateTime: "asc",
       },
     });
   }
@@ -189,4 +237,28 @@ export class AppointmentRepository {
   }
 
   // Métodos específicos para AppointmentServic
+  async checkAvailability(
+    professionalId: number,
+    dateTime: Date,
+    duration: number
+  ): Promise<boolean> {
+    const endTime = new Date(dateTime.getTime() + duration * 60000);
+
+    const conflictingAppointments =
+      await this.prisma.appointmentService.findMany({
+        where: {
+          professionalId,
+          dateTime: {
+            lt: endTime,
+          },
+          appointment: {
+            dateTime: {
+              gte: dateTime,
+            },
+          },
+        },
+      });
+
+    return conflictingAppointments.length === 0;
+  }
 }

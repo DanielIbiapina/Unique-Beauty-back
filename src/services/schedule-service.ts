@@ -36,6 +36,18 @@ export class ScheduleService {
     );
   }
 
+  async getFilteredScheduleSlots(
+    professionalId: number,
+    startDate: Date,
+    numberOfDays: number
+  ) {
+    return this.scheduleRepository.getFilteredScheduleSlots(
+      professionalId,
+      startDate,
+      numberOfDays
+    );
+  }
+
   async updateScheduleSlot(
     professionalId: number,
     date: string,

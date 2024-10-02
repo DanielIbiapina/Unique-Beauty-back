@@ -57,4 +57,32 @@ export class ScheduleRepository {
         });
       });
   }
+
+  async getFilteredScheduleSlots(
+    professionalId: number,
+    startDate: Date,
+    numberOfDays: number
+  ): Promise<ScheduleSlot[]> {
+    // Garantir que startDate seja uma data válida
+    const validStartDate = new Date(startDate);
+    if (isNaN(validStartDate.getTime())) {
+      throw new Error("Data inicial inválida");
+    }
+
+    // Calcular a data final
+    const endDate = new Date(validStartDate);
+    endDate.setDate(endDate.getDate() + numberOfDays);
+
+    return prisma.scheduleSlot.findMany({
+      where: {
+        professionalId,
+        date: {
+          gte: validStartDate,
+          lt: endDate,
+        },
+        available: true,
+      },
+      orderBy: [{ date: "asc" }, { startTime: "asc" }],
+    });
+  }
 }
