@@ -70,6 +70,6 @@ model Client {
     name         String
     email        String
     appointments Appointment[]
-    phone        String?
+    phone        String?       @unique
     address      String?
 }

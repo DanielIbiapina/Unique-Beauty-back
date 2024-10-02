@@ -5,6 +5,7 @@ import { servicesRouter } from "./routes/services-route";
 import { professionalsRouter } from "./routes/professionals-route";
 import { appointmentRouter } from "./routes/appointment-route";
 import { scheduleRouter } from "./routes/schedule-route";
+import { clientRouter } from "./routes/client-route";
 loadEnv();
 
 const app = express();
@@ -15,7 +16,8 @@ app
   .use("/services", servicesRouter)
   .use("/professionals", professionalsRouter)
   .use("/appointments", appointmentRouter)
-  .use("/schedule", scheduleRouter);
+  .use("/schedule", scheduleRouter)
+  .use("/clients", clientRouter);
 
 export function init(): Promise<Express> {
   connectDb();
