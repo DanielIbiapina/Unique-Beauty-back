@@ -6,6 +6,10 @@ import { professionalsRouter } from "./routes/professionals-route";
 import { appointmentRouter } from "./routes/appointment-route";
 import { scheduleRouter } from "./routes/schedule-route";
 import { clientRouter } from "./routes/client-route";
+import { authRouter } from "./routes/auth-route";
+import { adminRouter } from "./routes/admin-route";
+import { userRouter } from "./routes/user-route";
+
 loadEnv();
 
 const app = express();
@@ -17,7 +21,10 @@ app
   .use("/professionals", professionalsRouter)
   .use("/appointments", appointmentRouter)
   .use("/schedule", scheduleRouter)
-  .use("/clients", clientRouter);
+  .use("/clients", clientRouter)
+  .use("/auth", authRouter)
+  .use("/admin", adminRouter)
+  .use("/users", userRouter);
 
 export function init(): Promise<Express> {
   connectDb();

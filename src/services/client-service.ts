@@ -12,7 +12,9 @@ export class ClientService {
     return this.clientRepository.create(data);
   }
 
-  async findByPhone(phone: string): Promise<Client | null> {
+  async findByPhone(
+    phone: string
+  ): Promise<{ name: string; id: string } | null> {
     return this.clientRepository.findByPhone(phone);
   }
 

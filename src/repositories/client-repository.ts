@@ -7,12 +7,15 @@ export class ClientRepository {
     return prisma.client.findMany();
   }
 
-  async findByPhone(phone: string): Promise<string | null> {
+  async findByPhone(
+    phone: string
+  ): Promise<{ name: string; id: string } | null> {
     const client = await prisma.client.findUnique({
       where: { phone },
-      select: { name: true },
+      select: { name: true, id: true },
     });
-    return client ? client.name : null;
+
+    return client ? { name: client.name, id: client.id } : null;
   }
 
   async create(data: Client): Promise<Client> {
