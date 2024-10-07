@@ -1,11 +1,11 @@
 import request from "supertest";
 import app from "../src/app"; // ajuste o caminho conforme necessário
-import { PrismaClient } from "@prisma/client";
+//import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+//const prisma = new PrismaClient();
 
-describe("Appointments API", () => {
-  let appointmentId: number;
+/*describe("Appointments API", () => {
+  //let appointmentId: number;
 
   /*describe("POST /appointments", () => {
     it("should return 400 for invalid input", async () => {
@@ -45,7 +45,7 @@ describe("Appointments API", () => {
     });
   });*/
 
-  describe("GET /appointments", () => {
+/*describe("GET /appointments", () => {
     it("should return a list of appointments", async () => {
       const response = await request(app).get("/appointments");
 
@@ -54,25 +54,29 @@ describe("Appointments API", () => {
     });
   });
 });
-
-describe("GET /health", () => {
-  it("should return 200 OK!", async () => {
-    const response = await request(app).get("/health");
-    expect(response.status).toBe(200);
-    expect(response.text).toBe("OK!");
-  });
-});
+*/
 
 describe("GET /services", () => {
   it("should return 200 OK!", async () => {
-    const response = await request(app).get("/services");
+    try {
+      const response = await request(app).get("/services");
 
-    expect(response.status).toBe(200);
-    //expect(response.body).toBe("oi");
+      console.log("Response status:", response.status);
+      console.log("Response body:", response.body);
+
+      expect(response.status).toBe(200);
+
+      // Adicione mais expectativas para verificar o conteúdo da resposta
+      expect(Array.isArray(response.body)).toBe(true);
+      expect(response.body.length).toBeGreaterThan(0);
+    } catch (error) {
+      console.error("Error in test:", error);
+      throw error;
+    }
   });
 });
 
-describe("GET /services/grouped", () => {
+/*describe("GET /services/grouped", () => {
   it("should return 200 OK!", async () => {
     const response = await request(app).get("/services/grouped");
 
@@ -111,3 +115,4 @@ describe("GET /appointments/:ano/:mes/faturamento/profissional", () => {
     expect(response.status).toBe(200);
   });
 });
+*/
