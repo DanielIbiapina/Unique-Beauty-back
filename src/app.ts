@@ -42,8 +42,16 @@ app.get("/test-db", async (_req, res) => {
 
 export async function init(): Promise<Express> {
   loadEnv();
-  await connectDb();
-  console.log("Variável de ambiente DATABASE_URL:", process.env.DATABASE_URL);
+  console.log("Iniciando conexão com o banco de dados...");
+  console.log("DATABASE_URL:", process.env.DATABASE_URL);
+  console.log("DIRECT_URL:", process.env.DIRECT_URL);
+  try {
+    await connectDb();
+    console.log("Conexão com o banco de dados estabelecida com sucesso.");
+  } catch (error) {
+    console.error("Erro ao conectar ao banco de dados:", error);
+    throw error;
+  }
   return app;
 }
 

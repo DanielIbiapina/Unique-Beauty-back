@@ -1,81 +1,83 @@
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider          = "postgresql"
+    url               = env("DATABASE_URL")
+    shadowDatabaseUrl = env("SHADOW_DATABASE_URL") // Opcional, se você estiver usando migrations
+    directUrl         = env("DIRECT_URL") // Adicione esta linha
 }
 
 model User {
-  id       String @id @default(uuid())
-  username String @unique
-  password String
-  role     String
+    id       String @id @default(uuid())
+    username String @unique
+    password String
+    role     String
 }
 
 model Category {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique
-  services Service[]
+    id       Int       @id @default(autoincrement())
+    name     String    @unique
+    services Service[]
 }
 
 model Service {
-  id                 Int                  @id @default(autoincrement())
-  name               String
-  price              Float
-  categoryId         Int
-  duration           Int
-  AppointmentService AppointmentService[]
-  category           Category             @relation(fields: [categoryId], references: [id])
+    id                 Int                  @id @default(autoincrement())
+    name               String
+    price              Float
+    categoryId         Int
+    duration           Int
+    AppointmentService AppointmentService[]
+    category           Category             @relation(fields: [categoryId], references: [id])
 }
 
 model Professional {
-  id                 Int                  @id @default(autoincrement())
-  name               String
-  imageUrl           String
-  role               String
-  AppointmentService AppointmentService[]
-  scheduleSlots      ScheduleSlot[]
+    id                 Int                  @id @default(autoincrement())
+    name               String
+    imageUrl           String
+    role               String
+    AppointmentService AppointmentService[]
+    scheduleSlots      ScheduleSlot[]
 }
 
 model ScheduleSlot {
-  id             Int          @id @default(autoincrement())
-  date           DateTime
-  startTime      String
-  endTime        String
-  available      Boolean      @default(true)
-  professionalId Int
-  professional   Professional @relation(fields: [professionalId], references: [id])
+    id             Int          @id @default(autoincrement())
+    date           DateTime
+    startTime      String
+    endTime        String
+    available      Boolean      @default(true)
+    professionalId Int
+    professional   Professional @relation(fields: [professionalId], references: [id])
 }
 
 model Appointment {
-  id         Int                  @id @default(autoincrement())
-  dateTime   DateTime
-  totalPrice Float
-  clientId   Int
-  status     String
-  client     Client               @relation(fields: [clientId], references: [id])
-  services   AppointmentService[]
+    id         Int                  @id @default(autoincrement())
+    dateTime   DateTime
+    totalPrice Float
+    clientId   Int
+    status     String
+    client     Client               @relation(fields: [clientId], references: [id])
+    services   AppointmentService[]
 }
 
 model AppointmentService {
-  id             Int          @id @default(autoincrement())
-  appointmentId  Int
-  serviceId      Int
-  professionalId Int
-  price          Float
-  dateTime       DateTime
-  appointment    Appointment  @relation(fields: [appointmentId], references: [id])
-  professional   Professional @relation(fields: [professionalId], references: [id])
-  service        Service      @relation(fields: [serviceId], references: [id])
+    id             Int          @id @default(autoincrement())
+    appointmentId  Int
+    serviceId      Int
+    professionalId Int
+    price          Float
+    dateTime       DateTime
+    appointment    Appointment  @relation(fields: [appointmentId], references: [id])
+    professional   Professional @relation(fields: [professionalId], references: [id])
+    service        Service      @relation(fields: [serviceId], references: [id])
 }
 
 model Client {
-  id           Int           @id @default(autoincrement())
-  name         String
-  email        String
-  phone        String?       @unique
-  address      String?
-  appointments Appointment[]
+    id           Int           @id @default(autoincrement())
+    name         String
+    email        String
+    phone        String?       @unique
+    address      String?
+    appointments Appointment[]
 }
