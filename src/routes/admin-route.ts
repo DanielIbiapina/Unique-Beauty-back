@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authMiddleware, adminOnly } from "../middlewares/auth-middleware";
 import { AppointmentController } from "../controllers/appointment-controller";
-import { ScheduleController } from "../controllers/schedule-controller";
+//import { ScheduleController } from "../controllers/schedule-controller";
 
 const adminRouter = Router();
 const appointmentController = new AppointmentController();
