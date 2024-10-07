@@ -1,12 +1,13 @@
 generator client {
-    provider = "prisma-client-js"
+    provider        = "prisma-client-js"
+    previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-    provider          = "postgresql"
-    url               = env("DATABASE_URL")
-    shadowDatabaseUrl = env("SHADOW_DATABASE_URL") // Opcional, se você estiver usando migrations
-    directUrl         = env("DIRECT_URL") // Adicione esta linha
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    // shadowDatabaseUrl = env("SHADOW_DATABASE_URL") // Opcional, se você estiver usando migrations
+    directUrl = env("DIRECT_URL") // Adicione esta linha
 }
 
 model User {

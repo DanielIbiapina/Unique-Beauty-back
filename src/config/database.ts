@@ -11,6 +11,7 @@ export function getPrisma(): PrismaClient {
         },
       },
       log: ["query", "info", "warn", "error"],
+      errorFormat: "pretty",
     });
   }
   return prisma;
@@ -18,12 +19,24 @@ export function getPrisma(): PrismaClient {
 
 export async function connectDb(): Promise<void> {
   const client = getPrisma();
-  try {
-    await client.$connect();
-    console.log("Conexão com o banco de dados estabelecida com sucesso.");
-  } catch (error) {
-    console.error("Erro ao conectar ao banco de dados:", error);
-    throw error;
+  let retries = 5;
+  while (retries > 0) {
+    try {
+      await client.$connect();
+      console.log("Conexão com o banco de dados estabelecida com sucesso.");
+      return;
+    } catch (error) {
+      console.error(
+        `Tentativa de conexão falhou. Tentativas restantes: ${retries}`
+      );
+      retries--;
+      if (retries === 0) {
+        console.error("Erro ao conectar ao banco de dados:", error);
+        throw error;
+      }
+      // Espera 5 segundos antes de tentar novamente
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+    }
   }
 }
 
