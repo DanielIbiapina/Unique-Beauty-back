@@ -49,6 +49,7 @@ export async function init(): Promise<Express> {
     "NODE_TLS_REJECT_UNAUTHORIZED:",
     process.env.NODE_TLS_REJECT_UNAUTHORIZED
   );
+  console.log("DEBUG:", process.env.DEBUG);
 
   try {
     await Promise.race([
@@ -56,7 +57,7 @@ export async function init(): Promise<Express> {
       new Promise((_, reject) =>
         setTimeout(
           () => reject(new Error("Timeout ao conectar ao banco de dados")),
-          30000
+          60000
         )
       ),
     ]);

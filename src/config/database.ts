@@ -22,6 +22,9 @@ export async function connectDb(): Promise<void> {
   let retries = 5;
   while (retries > 0) {
     try {
+      console.log(
+        `Tentando conectar ao banco de dados. Tentativa ${6 - retries} de 5.`
+      );
       await client.$connect();
       console.log("Conexão com o banco de dados estabelecida com sucesso.");
       return;
@@ -29,12 +32,13 @@ export async function connectDb(): Promise<void> {
       console.error(
         `Tentativa de conexão falhou. Tentativas restantes: ${retries}`
       );
+      console.error("Detalhes do erro:", error);
       retries--;
       if (retries === 0) {
         console.error("Erro ao conectar ao banco de dados:", error);
         throw error;
       }
-      // Espera 5 segundos antes de tentar novamente
+      console.log("Aguardando 5 segundos antes da próxima tentativa...");
       await new Promise((resolve) => setTimeout(resolve, 5000));
     }
   }
