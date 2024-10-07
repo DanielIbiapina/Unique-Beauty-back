@@ -43,13 +43,10 @@ app.get("/test-db", async (_req, res) => {
 export async function init(): Promise<Express> {
   loadEnv();
   console.log("Iniciando conexão com o banco de dados...");
-  console.log("DATABASE_URL:", process.env.DATABASE_URL);
-  console.log("DIRECT_URL:", process.env.DIRECT_URL);
   console.log(
-    "NODE_TLS_REJECT_UNAUTHORIZED:",
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED
+    "DATABASE_URL:",
+    process.env.DATABASE_URL?.substring(0, 20) + "..."
   );
-  console.log("DEBUG:", process.env.DEBUG);
 
   try {
     await Promise.race([
@@ -57,13 +54,17 @@ export async function init(): Promise<Express> {
       new Promise((_, reject) =>
         setTimeout(
           () => reject(new Error("Timeout ao conectar ao banco de dados")),
-          60000
+          120000
         )
       ),
     ]);
     console.log("Conexão com o banco de dados estabelecida com sucesso.");
-  } catch (error) {
-    console.error("Erro ao conectar ao banco de dados:", error);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Erro ao conectar ao banco de dados:", error.message);
+    } else {
+      console.error("Erro desconhecido ao conectar ao banco de dados");
+    }
     throw error;
   }
   return app;
