@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 async function main() {
   const categories = ["Cabelo", "Unhas", "Depilação", "Outros"];
 
+  await prisma.category.findMany();
   for (const categoryName of categories) {
     await prisma.category.create({
       data: {

@@ -25,7 +25,7 @@ export class ProfessionalsController {
       );
       res.json(professional);
     } catch (error) {
-      res.status(500).json({ error: "Erro ao criar profissional" });
+      res.status(500).json(error);
     }
   }
 

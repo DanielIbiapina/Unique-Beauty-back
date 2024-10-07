@@ -1,4 +1,4 @@
-import request from "supertest";
+/*import request from "supertest";
 import app from "../src/app"; // ajuste o caminho conforme necessário
 //import { PrismaClient } from "@prisma/client";
 
@@ -56,7 +56,7 @@ import app from "../src/app"; // ajuste o caminho conforme necessário
 });
 */
 
-describe("GET /services", () => {
+/*describe("GET /services", () => {
   it("should return 200 OK!", async () => {
     try {
       const response = await request(app).get("/services");

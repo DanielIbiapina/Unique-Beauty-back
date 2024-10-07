@@ -27,6 +27,8 @@ app
 
 export function init(): Promise<Express> {
   connectDb();
+  console.log(process.env.DATABASE_URL);
+
   return Promise.resolve(app);
 }
 

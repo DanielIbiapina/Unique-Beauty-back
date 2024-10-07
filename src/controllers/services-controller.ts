@@ -10,6 +10,7 @@ export class ServicesController {
 
   async getAllServices(_req: Request, res: Response): Promise<void> {
     try {
+      console.log("Connecting to database:", process.env.DATABASE_URL);
       const services = await this.servicesService.getAllServices();
       res.json(services);
     } catch (error) {
