@@ -8,6 +8,7 @@
     "build": "npm i && tsc",
     "start": "node dist/server.js",
     "test": "jest"
+    
   },
   "repository": {
     "type": "git",

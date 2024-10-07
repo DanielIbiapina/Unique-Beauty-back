@@ -12,19 +12,24 @@ interface ServiceWithCategoryName {
 
 export class ServicesRepository {
   async findAllServices(): Promise<ServiceWithCategoryName[]> {
-    const services = await prisma.service.findMany({
-      include: {
-        category: true,
-      },
-    });
+    try {
+      const services = await prisma.service.findMany({
+        include: {
+          category: true,
+        },
+      });
 
-    return services.map((service) => ({
-      id: service.id,
-      name: service.name,
-      price: service.price,
-      duration: service.duration,
-      category: service.category.name,
-    }));
+      return services.map((service) => ({
+        id: service.id,
+        name: service.name,
+        price: service.price,
+        duration: service.duration,
+        category: service.category.name,
+      }));
+    } catch (error) {
+      console.error("Erro ao buscar serviços:", error);
+      throw new Error("Erro ao buscar serviços"); // Lança um erro para que o controlador possa tratá-lo
+    }
   }
 
   async findServiceById(id: number): Promise<ServiceWithCategoryName | null> {
