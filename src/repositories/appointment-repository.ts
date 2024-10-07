@@ -160,9 +160,7 @@ export class AppointmentRepository {
   }
 
   async getAppointmentsByProfessional(
-    professionalId: number,
-    startDate: Date,
-    endDate: Date
+    professionalId: number
   ): Promise<Appointment[]> {
     return this.prisma.appointment.findMany({
       where: {

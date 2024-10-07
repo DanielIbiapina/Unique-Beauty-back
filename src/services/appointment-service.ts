@@ -47,7 +47,15 @@ export class AppointmentService {
 
   async updateAppointment(
     id: number,
-    appointmentData: Prisma.AppointmentUpdateInput
+    appointmentData: Omit<Prisma.AppointmentUpdateInput, "services"> & {
+      services: Array<{
+        id?: number;
+        serviceId: number;
+        professionalId: number;
+        price: number;
+        dateTime: Date;
+      }>;
+    }
   ): Promise<Appointment> {
     // Aqui você pode adicionar lógica de negócios, validações, etc.
     return this.appointmentRepository.update(id, appointmentData);

@@ -35,27 +35,27 @@ export class ScheduleRepository {
     date: string,
     startTime: string,
     available: boolean
-  ): Promise<ScheduleSlot> {
+  ): Promise<ScheduleSlot | null> {
     const isoDateTime = `${date}T00:00:00.000Z`;
-    return prisma.scheduleSlot
-      .updateMany({
-        where: {
-          professionalId,
-          date: new Date(isoDateTime),
-          startTime,
-        },
-        data: { available },
-      })
-      .then(async () => {
-        // Retorna o registro atualizado
-        return prisma.scheduleSlot.findFirst({
-          where: {
-            professionalId,
-            date: new Date(isoDateTime),
-            startTime,
-          },
-        });
-      });
+    await prisma.scheduleSlot.updateMany({
+      where: {
+        professionalId,
+        date: new Date(isoDateTime),
+        startTime,
+      },
+      data: { available },
+    });
+
+    // Retorna o registro atualizado
+    const updatedSlot = await prisma.scheduleSlot.findFirst({
+      where: {
+        professionalId,
+        date: new Date(isoDateTime),
+        startTime,
+      },
+    });
+
+    return updatedSlot;
   }
 
   async getFilteredScheduleSlots(

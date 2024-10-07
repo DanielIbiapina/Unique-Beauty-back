@@ -14,7 +14,7 @@ export class ClientService {
 
   async findByPhone(
     phone: string
-  ): Promise<{ name: string; id: string } | null> {
+  ): Promise<{ name: string; id: number } | null> {
     return this.clientRepository.findByPhone(phone);
   }
 

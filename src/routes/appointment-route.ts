@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { AppointmentController } from "../controllers/appointment-controller";
+import { authMiddleware } from "../middlewares/auth-middleware";
 
 const appointmentRouter = Router();
 const appointmentController = new AppointmentController();
@@ -27,7 +28,8 @@ appointmentRouter.get(
 // Obter um agendamento específico por ID
 appointmentRouter.get(
   "/:id",
-  appointmentController.getAppointment.bind(appointmentController)
+  authMiddleware,
+  appointmentController.getAppointment
 );
 
 // Substituir as duas rotas de faturamento por uma única rota

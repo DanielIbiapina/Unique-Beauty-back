@@ -35,20 +35,26 @@ export class AppointmentController {
     }
   }
 
-  async getAppointment(req: Request, res: Response) {
+  public getAppointment = async (
+    req: Request,
+    res: Response
+  ): Promise<void> => {
     try {
-      const { id } = req.params;
+      const appointmentId = parseInt(req.params.id, 10);
       const appointment = await this.appointmentService.getAppointment(
-        Number(id)
+        appointmentId
       );
-      if (!appointment) {
-        return res.status(404).json({ error: "Agendamento não encontrado" });
+
+      if (appointment) {
+        res.json(appointment);
+      } else {
+        res.status(404).json({ message: "Agendamento não encontrado" });
       }
-      res.json(appointment);
     } catch (error) {
-      res.status(400).json({ error: "Erro ao buscar o agendamento" });
+      console.error("Erro ao buscar agendamento:", error);
+      res.status(500).json({ message: "Erro interno do servidor" });
     }
-  }
+  };
 
   async updateAppointment(req: Request, res: Response) {
     try {

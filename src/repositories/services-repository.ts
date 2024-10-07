@@ -6,6 +6,7 @@ interface ServiceWithCategoryName {
   id: number;
   name: string;
   price: number;
+  duration: number; // Adicionando a propriedade duration
   category: string;
 }
 
