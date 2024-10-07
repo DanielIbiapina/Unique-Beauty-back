@@ -9,7 +9,6 @@ import { clientRouter } from "./routes/client-route";
 import { authRouter } from "./routes/auth-route";
 import { adminRouter } from "./routes/admin-route";
 import { userRouter } from "./routes/user-route";
-import { PrismaClient } from "@prisma/client";
 
 loadEnv();
 
@@ -27,7 +26,7 @@ app
   .use("/admin", adminRouter)
   .use("/users", userRouter);
 
-app.get("/test-db", async (req, res) => {
+app.get("/test-db", async (_req, res) => {
   try {
     const prisma = getPrisma();
     const result = await prisma.$queryRaw<[{ now: Date }]>`SELECT NOW()`;
