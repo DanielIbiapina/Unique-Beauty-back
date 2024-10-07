@@ -1,6 +1,5 @@
 import { AppointmentRepository } from "../repositories/appointment-repository";
-import { Appointment, Prisma, Service } from "@prisma/client";
-import { ServicesRepository } from "../repositories/services-repository";
+import { Appointment, Prisma } from "@prisma/client";
 
 export class AppointmentService {
   private appointmentRepository: AppointmentRepository;

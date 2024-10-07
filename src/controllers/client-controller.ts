@@ -28,7 +28,7 @@ export class ClientController {
     }
   }
 
-  async findAll(req: Request, res: Response): Promise<void> {
+  async findAll(_req: Request, res: Response): Promise<void> {
     try {
       const clients = await this.clientService.findAll();
       res.json(clients);

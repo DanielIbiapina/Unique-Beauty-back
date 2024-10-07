@@ -1,9 +1,4 @@
-import {
-  PrismaClient,
-  Appointment,
-  Prisma,
-  AppointmentService,
-} from "@prisma/client";
+import { PrismaClient, Appointment, Prisma } from "@prisma/client";
 
 export class AppointmentRepository {
   private prisma: PrismaClient;

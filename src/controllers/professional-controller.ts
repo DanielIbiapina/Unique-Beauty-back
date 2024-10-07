@@ -8,7 +8,7 @@ export class ProfessionalsController {
     this.professionalsService = new ProfessionalsService();
   }
 
-  async getAllProfessionals(req: Request, res: Response): Promise<void> {
+  async getAllProfessionals(_req: Request, res: Response): Promise<void> {
     try {
       const professionals =
         await this.professionalsService.getAllProfessionals();

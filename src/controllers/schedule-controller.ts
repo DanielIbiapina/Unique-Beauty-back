@@ -26,7 +26,7 @@ export class ScheduleController {
     }
   }
 
-  async getScheduleSlots(req: Request, res: Response) {
+  async getScheduleSlots(_req: Request, res: Response) {
     try {
       const scheduleSlots = await this.scheduleService.getScheduleSlots();
       res.status(200).json(scheduleSlots);

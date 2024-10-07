@@ -8,7 +8,7 @@ export class ServicesController {
     this.servicesService = new ServicesService();
   }
 
-  async getAllServices(req: Request, res: Response): Promise<void> {
+  async getAllServices(_req: Request, res: Response): Promise<void> {
     try {
       const services = await this.servicesService.getAllServices();
       res.json(services);
@@ -31,7 +31,7 @@ export class ServicesController {
     }
   }
 
-  async getServicesGroupedByCategory(req: Request, res: Response) {
+  async getServicesGroupedByCategory(_req: Request, res: Response) {
     try {
       const groupedServices: Record<
         string,
