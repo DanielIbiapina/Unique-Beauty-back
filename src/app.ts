@@ -1,4 +1,4 @@
-import express, { Express } from "express";
+import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import { loadEnv, connectDb, disconnectDB } from "./config";
 import { servicesRouter } from "./routes/services-route";
@@ -23,7 +23,12 @@ app
   .use("/clients", clientRouter)
   .use("/auth", authRouter)
   .use("/admin", adminRouter)
-  .use("/users", userRouter);
+  .use("/users", userRouter)
+  // Middleware de erro
+  .use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+    console.error("Erro não capturado:", err);
+    res.status(500).json({ error: "Erro interno do servidor" });
+  });
 
 export function init(): Promise<Express> {
   connectDb();

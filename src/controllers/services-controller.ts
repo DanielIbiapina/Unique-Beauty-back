@@ -14,6 +14,7 @@ export class ServicesController {
       const services = await this.servicesService.getAllServices();
       res.json(services);
     } catch (error) {
+      console.error("Erro ao buscar serviços no controlador:", error);
       res.status(500).json({ error: "Erro ao buscar serviços" });
     }
   }

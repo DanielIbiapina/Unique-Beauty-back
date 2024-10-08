@@ -27,8 +27,8 @@ export class ServicesRepository {
         category: service.category.name,
       }));
     } catch (error) {
-      console.error("Erro ao buscar serviços:", error);
-      throw new Error("Erro ao buscar serviços"); // Lança um erro para que o controlador possa tratá-lo
+      console.error("Erro ao buscar serviços no repositório:", error);
+      throw error; // Lança o erro para ser capturado no controller
     }
   }
 
